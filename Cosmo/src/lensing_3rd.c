@@ -75,10 +75,10 @@ void consistency_parameters_3rd(const cosmo_3rd *self, error **err)
       "bispmode=PT and nonlinear!=linear not consistent",
 		*err, __LINE__,);
 
-   testErrorRet(self->ia == ia_none && self->ia_terms != ia_3rd_undef, lensing_ia,
+   testErrorRet(self->ia == ia_3rd_none && self->ia_terms != ia_3rd_undef, lensing_ia,
       "IA terms should be 'ia_undef' for no intrinsic alignment",
       *err, __LINE__,);
-   testErrorRet(self->ia != ia_none && self->ia_terms == ia_3rd_undef, lensing_ia,
+   testErrorRet(self->ia != ia_3rd_none && self->ia_terms == ia_3rd_undef, lensing_ia,
       "IA terms cannot be 'ia_undef' for intrinsic alignment",
       *err, __LINE__,);
 }
@@ -1408,7 +1408,7 @@ double map3(cosmo_3rd *self, double R[3], int i_bin, int j_bin, int k_bin, filte
          permute3(myR, 0);
       }
 
-      testErrorRet(self->ia != ia_3rd_undef, lensing_ia,
+      testErrorRet(self->ia != ia_3rd_none, lensing_ia,
             "Intrinsic aligment for general skewness not yet known", 
             *err, __LINE__, 0.0);
 

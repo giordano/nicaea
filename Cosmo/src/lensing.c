@@ -724,7 +724,6 @@ double deriv_w_23(cosmo_lens *self, double wa, int n_bin, double *w2, double *w3
 double int_for_p_z(double z, void *intpar, error **err)
 {
    double hoverh0, s, fKw, f, a, res, wa, gg, a0, w0;
-   int i_bin, j_bin;
    cosmo_lensANDiid* cANDiid;
    cosmo_lens* self;
 
@@ -732,8 +731,6 @@ double int_for_p_z(double z, void *intpar, error **err)
    cANDiid = (cosmo_lensANDiid*)intpar;
    self    = cANDiid->self;
    s       = cANDiid->r;
-   i_bin   = cANDiid->i;
-   j_bin   = cANDiid->j;
 
    a       = 1.0 / (1.0 + z);
 
@@ -1069,14 +1066,11 @@ double Pshear_spherical(cosmo_lens *self, int ell, int i_bin, int j_bin, error *
 
 double Pshear_L2_Rijt(cosmo_lens *self, int ell, error **err)
 {
-   double chi, dchi, chi_S, a_S, nu, res, chi_max, dp, prefactor, k, L2, aa, z_S;
+   double chi, dchi, nu, res, chi_max, dp, prefactor, k, L2, aa;
    double w2, w3;
 
-   z_S = 1.0;
-   a_S = 1.0/(1.0 +z_S);
    nu  = ell + 0.5;
 
-   chi_S = w(self->cosmo, a_S, 0, err);
    forwardError(*err, __LINE__, -1.0);
    prefactor   = 9.0/4.0*dsqr((self->cosmo->Omega_m+self->cosmo->Omega_nu_mass)/R_HUBBLE/R_HUBBLE);
 
@@ -3083,6 +3077,8 @@ double chi2_lensing(cosmo_lens* csm, datcov* dc, int return_model, double **mode
 
       gsl_set_error_handler_off();
       x = gsl_vector_view_array(data_minus_model, dc->n);
+
+      tmp = NULL;
 
       switch (dc->cov_scaling) {
          case cov_const :

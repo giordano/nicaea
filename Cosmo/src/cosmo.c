@@ -2013,11 +2013,11 @@ iter_start:
             table_P[j] = log(2*pi_sqr*Delta_NL) - 3.0*lnk_NL; /* PD (3) */
 
          }
-         sm2_spline(table_k-1, table_P-1, N_k, self->n_spec, upper, y2-1, err);
+         sm2_spline(table_k, table_P, N_k, self->n_spec, upper, y2, err);
          forwardError(*err,__LINE__,0);
          klog = logkmin;
          for (j=0; j<N_k; j++, klog += dk) {
-            sm2_splint(table_k-1, table_P-1, y2-1, N_k, klog, &val,err);
+            sm2_splint(table_k, table_P, y2, N_k, klog, &val,err);
             forwardError(*err,__LINE__,0);
             lP_NL->table[i][j] = val;
          }

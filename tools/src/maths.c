@@ -605,27 +605,27 @@ void sm2_spline(double x[], double y[], int n, double yp1, double ypn, double y2
    u=sm2_vector(1,n-1,err);
    forwardError(*err,__LINE__,);
    if (yp1 > 0.99e30)
-     y2[1]=u[1]=0.0;
+     y2[0]=u[1]=0.0;
    else {
-      y2[1] = -0.5;
-      u[1]=(3.0/(x[2]-x[1]))*((y[2]-y[1])/(x[2]-x[1])-yp1);
+      y2[0] = -0.5;
+      u[1]=(3.0/(x[1]-x[0]))*((y[1]-y[0])/(x[1]-x[0])-yp1);
    }
    for (i=2;i<=n-1;i++) {
-      sig=(x[i]-x[i-1])/(x[i+1]-x[i-1]);
-      p=sig*y2[i-1]+2.0;
-      y2[i]=(sig-1.0)/p;
-      u[i]=(y[i+1]-y[i])/(x[i+1]-x[i]) - (y[i]-y[i-1])/(x[i]-x[i-1]);
-      u[i]=(6.0*u[i]/(x[i+1]-x[i-1])-sig*u[i-1])/p;
+      sig=(x[i-1]-x[i-2])/(x[i]-x[i-2]);
+      p=sig*y2[i-2]+2.0;
+      y2[i-1]=(sig-1.0)/p;
+      u[i]=(y[i]-y[i-1])/(x[i]-x[i-1]) - (y[i-1]-y[i-2])/(x[i-1]-x[i-2]);
+      u[i]=(6.0*u[i]/(x[i]-x[i-2])-sig*u[i-1])/p;
    }
    if (ypn > 0.99e30)
      qn=un=0.0;
    else {
       qn=0.5;
-      un=(3.0/(x[n]-x[n-1]))*(ypn-(y[n]-y[n-1])/(x[n]-x[n-1]));
+      un=(3.0/(x[n-1]-x[n-2]))*(ypn-(y[n-1]-y[n-2])/(x[n-1]-x[n-2]));
    }
-   y2[n]=(un-qn*u[n-1])/(qn*y2[n-1]+1.0);
+   y2[n-1]=(un-qn*u[n-1])/(qn*y2[n-2]+1.0);
    for (k=n-1;k>=1;k--) {
-     y2[k]=y2[k]*y2[k+1]+u[k];
+     y2[k-1]=y2[k-1]*y2[k]+u[k];
    }
    sm2_free_vector(u,1,n-1);
 }
@@ -639,15 +639,15 @@ void sm2_splint(double xa[], double ya[], double y2a[], int n, double x, double 
    khi=n;
    while (khi-klo > 1) {
       k=(khi+klo) >> 1;
-      if (xa[k] > x) khi=k;
+      if (xa[k-1] > x) khi=k;
       else klo=k;
    }
-   h=xa[khi]-xa[klo];
+   h=xa[khi-1]-xa[klo-1];
    testErrorRet(h==0.0, math_wrongValue, "h cannot be 0", *err, __LINE__,);
-   a=(xa[khi]-x)/h;
-   b=(x-xa[klo])/h;
-   *y=a*ya[klo]+b*ya[khi]+
-     ((a*a*a-a)*y2a[klo]+(b*b*b-b)*y2a[khi])*(h*h)/6.0;
+   a=(xa[khi-1]-x)/h;
+   b=(x-xa[klo-1])/h;
+   *y=a*ya[klo-1]+b*ya[khi-1]+
+     ((a*a*a-a)*y2a[klo-1]+(b*b*b-b)*y2a[khi-1])*(h*h)/6.0;
 }
 
 void sm2_splin2(double x1a[], double x2a[], double **ya, double **y2a, int m, int n,

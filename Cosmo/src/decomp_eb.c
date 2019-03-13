@@ -591,16 +591,8 @@ double *read_zeros_norm_cosebi(const char *rname, double *psimin, double *psimax
    int Nzeros, Ncoeff, k, n, off_c, off_R, nmax;
    ssize_t nread;
    double *Rn, *Norm, *c;
-   char *str, *line=NULL;
-
 
    F = fopen_err(rname, "r", err);                  forwardError(*err, __LINE__, NULL);
-
-   /* Read two header lines */
-   line = malloc_err(1024*sizeof(char), err);       forwardError(*err, __LINE__, NULL);
-   str = fgets(line, 1024, F);
-   str = fgets(line, 1024, F);
-   free(line);
 
    nread = fscanf(F, "%d  %lg %lg\n", &nmax, psimin, psimax);
    testErrorRet(nread != 3, mr_file, "File has wrong format.", *err, __LINE__, NULL);
