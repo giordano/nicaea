@@ -1,17 +1,25 @@
 language: c
 
-os:
-  - linux
-  - osx
+addons:
+  apt:
+    packages:
+      - cmake
+      - libgsl0-dev
+      - libfftw3-dev
+  homebrew:
+    packages:
+      - cmake
+      - pkgconfig
+      - gsl
+      - fftw
 
-before_install:
-    - if [[ $TRAVIS_OS_NAME == "linux" ]]; then sudo apt-get -qq update; fi
-
-install:
-    - if ! [[ $TRAVIS_OS_NAME == "linux" ]]; then brew cask uninstall oclint; fi
-    - if ! [[ $TRAVIS_OS_NAME == "linux" ]]; then brew install fftw; fi
-    - if ! [[ $TRAVIS_OS_NAME == "linux" ]]; then brew install gsl; fi
-    - if [[ $TRAVIS_OS_NAME == "linux" ]]; then sudo apt-get install -y libfftw3-dev libgsl0-dev; fi
+matrix:
+  include:
+    - os: linux
+      name: "GNU/Linux with GCC"
+    - os: osx
+      name: "macOS with AppleClang"
+      osx_image: xcode10.2
 
 script:
     - mkdir build && cd build
