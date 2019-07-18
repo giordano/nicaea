@@ -17,7 +17,9 @@ project(nicaea)
 		#
 		# Compilation flags
 		#
-		set(CMAKE_C_FLAGS "-Wuninitialized -O3 -fPIC -std=gnu9x")
+		set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wuninitialized -fPIC -std=gnu9x")
+		set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O3")
+		set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -O0")
 
 		#
 		# Building nicaea library
